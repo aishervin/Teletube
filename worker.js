@@ -78,6 +78,14 @@ process.on("SIGINT", () => {
   stopped = true;
 });
 
+// شبکه ایمنی: هر خطای پیش‌بینی‌نشده‌ی دیگه هم کل پروسه رو کرش نده، فقط لاگ بشه
+process.on("uncaughtException", (e) => {
+  log(`خطای پیش‌بینی‌نشده (نادیده گرفته شد تا لوپ ادامه پیدا کنه): ${e.message}`);
+});
+process.on("unhandledRejection", (e) => {
+  log(`Promise رد شده مدیریت‌نشده (نادیده گرفته شد): ${e}`);
+});
+
 function streamOneVideo(videoId) {
   return new Promise((resolve) => {
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
@@ -124,6 +132,15 @@ function streamOneVideo(videoId) {
 
     const yt = spawn("yt-dlp", ytArgs, { stdio: ["ignore", "pipe", "pipe"] });
     const ff = spawn("ffmpeg", ffArgs, { stdio: ["pipe", "pipe", "pipe"] });
+
+    // مهم: اگر سرور RTMP (تلگرام) اتصال رو قطع کنه، نوشتن روی stdin ffmpeg
+    // خطای EPIPE میده. بدون این هندلر، این خطا کل پروسه Node رو کرش می‌کنه.
+    ff.stdin.on("error", (e) => {
+      log(`ارتباط RTMP قطع شد (${e.code || e.message}) — رد شدن به ویدیوی بعدی.`);
+    });
+    yt.stdout.on("error", (e) => {
+      log(`خطای stream خروجی yt-dlp: ${e.message}`);
+    });
 
     yt.stdout.pipe(ff.stdin);
 
