@@ -75,12 +75,13 @@ jobs:
           DESTINATION: ${{ inputs.destination || 'channel' }}
           STREAM_QUALITY: ${{ inputs.stream_quality || 'balanced' }}
           RTMP_URL: ${{ inputs.rtmp_url || ((inputs.destination || 'channel') == 'group' && (secrets.GSTREAM_RTMPS_URL || secrets.RTMP_URL) || (secrets.CSTREAM_RTMPS_URL || secrets.RTMP_URL)) }}
+          CUSTOM_RTMP_URL: ${{ inputs.rtmp_url }}
           YT_COOKIES: ${{ secrets.YT_COOKIES }}
           PROXY_URL: ${{ inputs.proxy_url || secrets.PROXY_URL }}
           POT_BASE_URL: ${{ secrets.POT_BASE_URL }}
         run: |
           set -euo pipefail
-          if [[ "$DESTINATION" == "custom" && -z "${{ inputs.rtmp_url }}" ]]; then
+          if [[ "$DESTINATION" == "custom" && -z "$CUSTOM_RTMP_URL" ]]; then
             echo "A custom destination requires the rtmp_url input." >&2
             exit 1
           fi
