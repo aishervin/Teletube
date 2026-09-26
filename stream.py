@@ -17,18 +17,11 @@ RTMP_URL = os.environ.get("RTMP_URL", "").strip()
 COOKIES = os.environ.get("YT_COOKIES", "")
 PROXY_URL = os.environ.get("PROXY_URL", "").strip()
 POT_BASE_URL = os.environ.get("POT_BASE_URL", "").strip()
-DESTINATION = os.environ.get("DESTINATION", "custom").strip() or "custom"
-STREAM_QUALITY = os.environ.get("STREAM_QUALITY", "balanced").strip() or "balanced"
 
 # Web clients support cookies and expose real media formats once the EJS
 # challenge solver is enabled. Keep android_vr as a final no-cookie fallback.
 CLIENTS = ("web", "web_safari", "web_embedded", "android_vr")
 VIDEO_ID = re.compile(r"^[A-Za-z0-9_-]{6,}$")
-QUALITY_PROFILES = {
-    "economy": {"max_height": 480, "max_width": 854, "bitrate": "900k", "maxrate": "1100k", "bufsize": "1800k", "audio": "96k", "fps": 25, "gop": 50},
-    "balanced": {"max_height": 720, "max_width": 1280, "bitrate": "1500k", "maxrate": "1800k", "bufsize": "3000k", "audio": "128k", "fps": 30, "gop": 60},
-    "high": {"max_height": 1080, "max_width": 1920, "bitrate": "2600k", "maxrate": "3200k", "bufsize": "5200k", "audio": "128k", "fps": 30, "gop": 60},
-}
 STOP = False
 
 
@@ -125,7 +118,6 @@ def playlist_ids() -> list[str]:
 
 def download_video(video_id: str, directory: Path) -> Path | None:
     video_url = f"https://www.youtube.com/watch?v={video_id}"
-    profile = QUALITY_PROFILES[STREAM_QUALITY]
     for client in CLIENTS:
         output = directory / "video.%(ext)s"
         result = run_checked(
@@ -133,7 +125,7 @@ def download_video(video_id: str, directory: Path) -> Path | None:
             + [
                 "--no-playlist",
                 "--format",
-                f"best[height<={profile['max_height']}]/best",
+                "best[height<=1080]/best",
                 "--output",
                 str(output),
                 "--no-part",
@@ -158,7 +150,6 @@ def download_video(video_id: str, directory: Path) -> Path | None:
 
 
 def stream_file(video_path: Path) -> int:
-    profile = QUALITY_PROFILES[STREAM_QUALITY]
     args = [
         "ffmpeg",
         "-hide_banner",
@@ -167,10 +158,6 @@ def stream_file(video_path: Path) -> int:
         "-re",
         "-i",
         str(video_path),
-        "-vf",
-        f"scale=w='min({profile['max_width']},iw)':h=-2",
-        "-r",
-        str(profile["fps"]),
         "-map",
         "0:v:0",
         "-map",
@@ -182,19 +169,19 @@ def stream_file(video_path: Path) -> int:
         "-tune",
         "zerolatency",
         "-b:v",
-        profile["bitrate"],
+        "2500k",
         "-maxrate",
-        profile["maxrate"],
+        "2500k",
         "-bufsize",
-        profile["bufsize"],
+        "5000k",
         "-pix_fmt",
         "yuv420p",
         "-g",
-        str(profile["gop"]),
+        "60",
         "-c:a",
         "aac",
         "-b:a",
-        profile["audio"],
+        "128k",
         "-ar",
         "44100",
         "-f",
@@ -232,28 +219,15 @@ def stream_video(video_id: str) -> None:
         if video_path is None:
             log(f"Skipping {video_id}: download failed")
             return
-        log(f"Streaming {video_id} from {video_path.suffix[1:] or 'file'} with {STREAM_QUALITY} profile")
-        for attempt in range(1, 4):
-            code = stream_file(video_path)
-            if code == 0 or STOP:
-                log(f"Finished {video_id} with ffmpeg exit code {code}")
-                return
-            log(f"RTMP ended for {video_id} (attempt {attempt}/3); reconnecting in 5 seconds")
-            if attempt < 3:
-                time.sleep(5)
-        log(f"Moving to the next video after RTMP retries for {video_id}")
+        log(f"Streaming {video_id} from {video_path.suffix[1:] or 'file'}")
+        code = stream_file(video_path)
+        log(f"Finished {video_id} with ffmpeg exit code {code}")
 
 
 def main() -> int:
-    global STREAM_QUALITY
     if not PLAYLIST_URL or not RTMP_URL:
         log("PLAYLIST_URL and RTMP_URL are required")
         return 1
-    if STREAM_QUALITY not in QUALITY_PROFILES:
-        log(f"Unknown quality '{STREAM_QUALITY}', using balanced")
-        STREAM_QUALITY = "balanced"
-
-    log(f"Destination: {DESTINATION}; quality: {STREAM_QUALITY}; max download: 1080p")
 
     signal.signal(signal.SIGTERM, handle_signal)
     signal.signal(signal.SIGINT, handle_signal)

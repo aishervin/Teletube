@@ -4,36 +4,19 @@ on:
   workflow_dispatch:
     inputs:
       playlist_url:
-        description: YouTube playlist URL (leave blank to use PLAYLIST_URL secret)
+        description: YouTube playlist URL
         required: false
         type: string
-      destination:
-        description: Telegram destination
-        required: false
-        default: channel
-        type: choice
-        options:
-          - channel
-          - group
-          - custom
       rtmp_url:
-        description: Custom RTMP URL (only for the custom destination)
+        description: Telegram RTMP URL and stream key
         required: false
         type: string
-      stream_quality:
-        description: Output profile
-        required: false
-        default: balanced
-        type: choice
-        options:
-          - economy
-          - balanced
-          - high
       proxy_url:
         description: Optional proxy URL
         required: false
         type: string
   schedule:
+    # GitHub-hosted jobs have a six-hour limit. Restart shortly after each run.
     - cron: "0 */6 * * *"
 
 concurrency:
@@ -47,6 +30,7 @@ jobs:
   stream:
     runs-on: ubuntu-latest
     timeout-minutes: 350
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -66,25 +50,27 @@ jobs:
           set -euo pipefail
           yt-dlp --version
           ffmpeg -version >/dev/null
-          node --version
+          echo "ffmpeg is ready"
+           python3 --version
 
       - name: Start stream
         shell: bash
         env:
           PLAYLIST_URL: ${{ inputs.playlist_url || secrets.PLAYLIST_URL }}
-          DESTINATION: ${{ inputs.destination || 'channel' }}
-          STREAM_QUALITY: ${{ inputs.stream_quality || 'balanced' }}
-          RTMP_URL: ${{ inputs.rtmp_url || ((inputs.destination || 'channel') == 'group' && (secrets.GSTREAM_RTMPS_URL || secrets.RTMP_URL) || (secrets.CSTREAM_RTMPS_URL || secrets.RTMP_URL)) }}
-          CUSTOM_RTMP_URL: ${{ inputs.rtmp_url }}
+          RTMP_URL: ${{ inputs.rtmp_url || secrets.RTMP_URL }}
           YT_COOKIES: ${{ secrets.YT_COOKIES }}
           PROXY_URL: ${{ inputs.proxy_url || secrets.PROXY_URL }}
           POT_BASE_URL: ${{ secrets.POT_BASE_URL }}
         run: |
           set -euo pipefail
-          if [[ "$DESTINATION" == "custom" && -z "$CUSTOM_RTMP_URL" ]]; then
-            echo "A custom destination requires the rtmp_url input." >&2
+
+          test -n "$PLAYLIST_URL" || {
+            echo "Missing required secret: PLAYLIST_URL" >&2
             exit 1
-          fi
-          test -n "$PLAYLIST_URL" || { echo "Missing playlist URL." >&2; exit 1; }
-          test -n "$RTMP_URL" || { echo "Missing RTMP destination." >&2; exit 1; }
-          python3 stream.py
+          }
+          test -n "$RTMP_URL" || {
+            echo "Missing required secret: RTMP_URL" >&2
+            exit 1
+          }
+
+           python3 stream.py

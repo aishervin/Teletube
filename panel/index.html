@@ -1,57 +1,183 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#09111f">
-  <title>Teletube / اتاق کنترل</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>اتاق کنترل Teletube</title>
   <style>
-    :root{--bg:#07101d;--panel:#0d192a;--panel2:#101f33;--line:#20344d;--text:#eef5ff;--muted:#8ea3bb;--blue:#6ea8ff;--mint:#54e0ba;--coral:#ff817a;--yellow:#f4c66b;--shadow:0 24px 70px #0006}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(circle at 10% 0,#17335d 0,transparent 34%),radial-gradient(circle at 100% 20%,#123d3d 0,transparent 30%),var(--bg);font-family:Vazirmatn,Tahoma,Arial,sans-serif}button,input,select{font:inherit}a{color:var(--blue);text-decoration:none}.shell{width:min(1120px,calc(100% - 32px));margin:auto;padding:32px 0 54px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:54px}.brand{display:flex;align-items:center;gap:13px}.mark{width:44px;height:44px;border:1px solid #6ea8ff80;border-radius:14px;background:linear-gradient(145deg,#1a3c6d,#11213b);box-shadow:0 12px 32px #0a1e43}.mark:after{content:"";display:block;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:15px solid var(--mint);margin:12px 13px}.brand strong{display:block;font-size:18px;letter-spacing:.4px}.brand span{display:block;margin-top:3px;color:var(--muted);font-size:12px}.tag{border:1px solid var(--line);border-radius:99px;padding:9px 13px;color:var(--muted);font-size:12px;background:#0a1524aa}.hero{max-width:760px;margin-bottom:25px}.eyebrow{color:var(--mint);font-size:12px;letter-spacing:1.8px;text-transform:uppercase;margin:0 0 11px}.hero h1{font-size:clamp(31px,5vw,58px);line-height:1.08;letter-spacing:-1.8px;margin:0 0 17px}.hero p{color:var(--muted);font-size:15px;line-height:1.9;margin:0}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.card{background:linear-gradient(155deg,#122238ee,#0b1626ee);border:1px solid var(--line);border-radius:22px;padding:23px;box-shadow:var(--shadow)}.wide{grid-column:1/-1}.head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:21px}.head h2{font-size:17px;margin:0 0 5px}.head p{color:var(--muted);font-size:12px;line-height:1.7;margin:0}.pill{border-radius:99px;padding:7px 10px;border:1px solid var(--line);color:var(--muted);font-size:11px;white-space:nowrap}.pill.live{color:var(--mint);border-color:#54e0ba66;background:#54e0ba12}.pill.bad{color:var(--coral);border-color:#ff817a66;background:#ff817a12}.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:7px}.field.full{grid-column:1/-1}.field label{color:var(--muted);font-size:12px}.field input,.field select{width:100%;min-width:0;color:var(--text);background:#081321;border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:0}.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #6ea8ff16}.hint{color:var(--muted);font-size:11px;line-height:1.7}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.actions button{border:0;border-radius:12px;padding:12px 17px;cursor:pointer;font-weight:700}.primary{background:var(--mint);color:#06151a}.danger{background:var(--coral);color:#260b0b}.ghost{background:transparent;color:var(--text);border:1px solid var(--line)!important}.actions button:disabled{cursor:not-allowed;opacity:.4}.statusline{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:13px}.dot{width:9px;height:9px;border-radius:50%;background:#71839a;box-shadow:0 0 0 4px #71839a12}.dot.live{background:var(--mint);box-shadow:0 0 0 4px #54e0ba18}.dot.warn{background:var(--yellow)}.dot.bad{background:var(--coral)}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}.metric{background:#081321;border:1px solid var(--line);border-radius:14px;padding:13px}.metric small{display:block;color:var(--muted);font-size:11px;margin-bottom:8px}.metric strong{font-size:15px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.log{direction:ltr;text-align:left;min-height:126px;max-height:230px;overflow:auto;padding:14px;background:#07101a;border:1px solid var(--line);border-radius:14px;color:#b9c9db;font:12px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace}.log div{padding:4px 0;border-bottom:1px solid #20344d66}.log div:last-child{border:0}.secret-list{display:grid;gap:9px}.secret{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #20344d;padding:10px 0;font-size:13px}.secret:last-child{border:0}.secret small{color:var(--muted)}.ok{color:var(--mint)}.missing{color:var(--coral)}.notice{min-height:22px;color:var(--muted);font-size:12px;margin-top:13px}.notice.bad{color:var(--coral)}footer{display:flex;justify-content:space-between;gap:18px;color:var(--muted);font-size:11px;margin-top:19px}@media(max-width:760px){.shell{width:min(100% - 22px,620px);padding-top:22px}.topbar{margin-bottom:38px}.tag{display:none}.grid{grid-template-columns:1fr}.wide{grid-column:auto}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.metrics{grid-template-columns:1fr 1fr}.metric:last-child{grid-column:1/-1}footer{flex-direction:column}}
+    :root {
+      --ink: #f4f6fb;
+      --muted: #8b94aa;
+      --bg: #080b14;
+      --panel: #101625;
+      --panel-2: #151d30;
+      --line: #26314a;
+      --blue: #6ea8ff;
+      --mint: #53e0ba;
+      --coral: #ff7e75;
+      --yellow: #f3c86b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(80, 125, 255, .20), transparent 35%),
+        radial-gradient(circle at 90% 18%, rgba(83, 224, 186, .09), transparent 30%),
+        var(--bg);
+      font-family: Tahoma, Arial, sans-serif;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    button, input { font: inherit; }
+    .shell { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 34px 0 56px; }
+    .topbar { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 52px; }
+    .brand { display: flex; gap: 12px; align-items: center; }
+    .mark { width: 42px; height: 42px; border: 1px solid rgba(110,168,255,.55); border-radius: 13px; display: grid; place-items: center; background: linear-gradient(145deg, #1d3768, #11192d); box-shadow: 0 12px 32px rgba(31, 87, 180, .2); }
+    .mark i { display: block; width: 0; height: 0; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-right: 12px solid var(--mint); transform: translateX(2px); }
+    .brand strong { display: block; font-size: 16px; letter-spacing: .2px; }
+    .brand span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .badge { border: 1px solid var(--line); color: var(--muted); padding: 8px 12px; border-radius: 999px; font-size: 12px; background: rgba(16,22,37,.7); }
+    .hero { max-width: 760px; margin-bottom: 26px; }
+    .eyebrow { color: var(--mint); font-size: 12px; letter-spacing: 1.8px; text-transform: uppercase; margin: 0 0 12px; }
+    h1 { font-size: clamp(32px, 5vw, 60px); line-height: 1.06; letter-spacing: -1.7px; margin: 0 0 18px; }
+    .hero p { color: var(--muted); max-width: 600px; line-height: 1.9; margin: 0; font-size: 15px; }
+    .grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; }
+    .card { background: linear-gradient(160deg, rgba(21,29,48,.95), rgba(13,18,31,.95)); border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: 0 22px 65px rgba(0,0,0,.18); }
+    .wide { grid-column: 1 / -1; }
+    .card-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 22px; }
+    .card h2 { font-size: 16px; margin: 0 0 6px; }
+    .card-head p { color: var(--muted); font-size: 12px; margin: 0; line-height: 1.7; }
+    .state { display: inline-flex; gap: 8px; align-items: center; color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); box-shadow: 0 0 0 4px rgba(139,148,170,.09); }
+    .dot.live { background: var(--mint); box-shadow: 0 0 0 4px rgba(83,224,186,.12), 0 0 18px rgba(83,224,186,.75); }
+    .dot.warn { background: var(--yellow); box-shadow: 0 0 0 4px rgba(243,200,107,.12); }
+    .dot.bad { background: var(--coral); box-shadow: 0 0 0 4px rgba(255,126,117,.12); }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .metric { border: 1px solid var(--line); border-radius: 14px; padding: 15px; background: rgba(8,11,20,.28); min-height: 85px; }
+    .metric small { color: var(--muted); font-size: 11px; display: block; margin-bottom: 10px; }
+    .metric strong { display: block; font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+    button { border: 0; cursor: pointer; border-radius: 12px; padding: 12px 17px; color: #071018; font-weight: 700; transition: transform .18s ease, filter .18s ease, opacity .18s ease; }
+    button:hover { transform: translateY(-1px); filter: brightness(1.08); }
+    button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
+    .primary { background: var(--mint); }
+    .danger { background: var(--coral); }
+    .ghost { color: var(--ink); background: transparent; border: 1px solid var(--line); }
+    .secret-list { display: grid; gap: 10px; }
+    .secret { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(38,49,74,.75); font-size: 13px; }
+    .secret:last-child { border-bottom: 0; padding-bottom: 0; }
+    .secret span { color: var(--muted); }
+    .ok { color: var(--mint); }
+    .missing { color: var(--coral); }
+    .auth { display: flex; gap: 8px; margin-top: 16px; }
+    .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { display: grid; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: var(--muted); font-size: 12px; }
+    input { min-width: 0; flex: 1; background: #0a0f1c; border: 1px solid var(--line); color: var(--ink); border-radius: 11px; padding: 11px 12px; outline: none; }
+    input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(110,168,255,.12); }
+    .log { min-height: 110px; max-height: 265px; overflow: auto; border-radius: 13px; background: #090d17; border: 1px solid var(--line); padding: 14px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; direction: ltr; text-align: left; font-size: 12px; color: #b9c4d9; }
+    .log-line { padding: 5px 0; border-bottom: 1px solid rgba(38,49,74,.45); }
+    .log-line:last-child { border-bottom: 0; }
+    .notice { min-height: 20px; color: var(--muted); font-size: 12px; margin-top: 12px; }
+    footer { display: flex; justify-content: space-between; gap: 14px; color: var(--muted); font-size: 11px; margin-top: 18px; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .topbar { margin-bottom: 38px; } .metrics, .input-grid { grid-template-columns: 1fr; } .field.full { grid-column: auto; } .shell { width: min(100% - 22px, 620px); padding-top: 22px; } .card { padding: 18px; } footer { flex-direction: column; } }
   </style>
 </head>
 <body>
-<main class="shell">
-  <header class="topbar"><div class="brand"><div class="mark"></div><div><strong>Teletube</strong><span>اتاق کنترل پخش زنده</span></div></div><div class="tag">GitHub Actions · Cloudflare Pages</div></header>
-  <section class="hero"><p class="eyebrow">broadcast control room</p><h1>پخش را روشن، قابل‌اعتماد و قابل‌دیدن نگه دارید.</h1><p>مقصد، کیفیت و منبع را انتخاب کنید. مقدار Secretها هیچ‌وقت در این پنل نمایش داده نمی‌شود.</p></section>
-  <section class="grid">
-    <article class="card wide"><div class="head"><div><h2>راه‌اندازی پخش</h2><p>تنظیمات این بخش فقط برای اجرای بعدی ذخیره می‌شوند.</p></div><span class="pill" id="authPill">قفل است</span></div>
-      <div class="fields">
-        <div class="field full"><label for="playlistUrl">لینک پلی‌لیست YouTube</label><input id="playlistUrl" type="url" placeholder="https://www.youtube.com/playlist?list=..."><span class="hint">اگر خالی بماند، PLAYLIST_URL از Secret استفاده می‌شود.</span></div>
-        <div class="field"><label for="destination">مقصد Telegram</label><select id="destination"><option value="channel">کانال مشترک</option><option value="group">گروه مشترک</option><option value="custom">RTMP سفارشی</option></select></div>
-        <div class="field"><label for="quality">کیفیت و مصرف اینترنت</label><select id="quality"><option value="economy">اقتصادی · 480p / 1Mbps</option><option value="balanced" selected>متعادل · 720p / 1.5Mbps</option><option value="high">بالا · 1080p / 2.6Mbps</option></select></div>
-        <div class="field full" id="customWrap" hidden><label for="rtmpUrl">آدرس RTMP سفارشی</label><input id="rtmpUrl" type="password" autocomplete="off" placeholder="برای مقصد سفارشی وارد کنید"><span class="hint">برای امنیت، این مقدار در لاگ‌ها نمایش داده نمی‌شود. برای کانال و گروه از Secretهای موجود استفاده می‌شود.</span></div>
-        <div class="field full"><label for="proxyUrl">Proxy اختیاری</label><input id="proxyUrl" type="text" placeholder="http://user:pass@host:port"><span class="hint">برای اینترنت محدود؛ در صورت خالی‌بودن از PROXY_URL استفاده می‌شود.</span></div>
-      </div>
-      <div class="actions"><button class="primary" id="startBtn" disabled>شروع پخش</button><button class="danger" id="stopBtn" disabled>توقف اجرای فعال</button><button class="ghost" id="refreshBtn" disabled>به‌روزرسانی وضعیت</button></div><div class="notice" id="notice"></div>
-    </article>
-    <article class="card"><div class="head"><div><h2>وضعیت اجرای فعلی</h2><p id="runMeta">هنوز بررسی نشده</p></div><div class="statusline"><i class="dot" id="statusDot"></i><span id="statusText">نامشخص</span></div></div><div class="metrics"><div class="metric"><small>وضعیت</small><strong id="metricStatus">—</strong></div><div class="metric"><small>شماره اجرا</small><strong id="metricNumber">—</strong></div><div class="metric"><small>آخرین تغییر</small><strong id="metricTime">—</strong></div></div><div class="actions"><a class="pill" id="runLink" href="#" target="_blank" rel="noreferrer" hidden>بازکردن لاگ GitHub</a></div></article>
-    <article class="card"><div class="head"><div><h2>دسترسی</h2><p>رمز فقط در همین نشست مرورگر نگه داشته می‌شود.</p></div><span class="pill" id="securityPill">محلی</span></div><div class="field"><label for="password">رمز پنل</label><input id="password" type="password" autocomplete="current-password" placeholder="برای مشاهده و کنترل وارد کنید"></div><div class="actions"><button class="ghost" id="loginBtn">ورود و بررسی</button></div></article>
-    <article class="card"><div class="head"><div><h2>Secretهای متصل</h2><p>فقط وجود یا نبودن آن‌ها بررسی می‌شود.</p></div></div><div class="secret-list" id="secrets"><div class="secret"><span>در انتظار ورود</span><small>—</small></div></div></article>
-    <article class="card wide"><div class="head"><div><h2>لاگ کوتاه</h2><p>خلاصه وضعیت jobها؛ برای جزئیات کامل از لینک GitHub استفاده کنید.</p></div><span class="pill">آخرین پاسخ</span></div><div class="log" id="log">برای شروع، وارد شوید.</div></article>
-  </section>
-  <footer><span>مقادیر RTMP و Secret هرگز در رابط چاپ نمی‌شوند.</span><a href="https://github.com/Aishervin/teletube/actions/workflows/youtube-to-telegram.yml" target="_blank" rel="noreferrer">GitHub Actions</a></footer>
-</main>
-<script>
-  const $=id=>document.getElementById(id);
-  let password=sessionStorage.getItem('teletube-panel-password')||'';
-  let saved={};try{saved=JSON.parse(localStorage.getItem('teletube-stream-config')||'{}')}catch{saved={}};
-  let config={destination:'channel',quality:'balanced',playlistUrl:'',rtmpUrl:'',proxyUrl:'',...saved};
-  const labels={queued:'در صف',in_progress:'در حال پخش',completed:'تمام شد',success:'موفق',failure:'ناموفق',cancelled:'لغو شد',timed_out:'زمان تمام شد'};
-  const active=['queued','in_progress'];
-  function setNotice(text,bad=false){$('notice').textContent=text||'';$('notice').className='notice'+(bad?' bad':'')}
-  function save(){config={destination:$('destination').value,quality:$('quality').value,playlistUrl:$('playlistUrl').value.trim(),rtmpUrl:$('rtmpUrl').value.trim(),proxyUrl:$('proxyUrl').value.trim()};localStorage.setItem('teletube-stream-config',JSON.stringify(config))}
-  function load(){ $('destination').value=config.destination||'channel';$('quality').value=config.quality||'balanced';$('playlistUrl').value=config.playlistUrl||'';$('rtmpUrl').value=config.rtmpUrl||'';$('proxyUrl').value=config.proxyUrl||''; $('customWrap').hidden=$('destination').value!=='custom' }
-  function locked(){const yes=!password;$('authPill').textContent=yes?'قفل است':'متصل';$('authPill').className='pill'+(yes?'':' live');['startBtn','stopBtn','refreshBtn'].forEach(id=>$(id).disabled=yes);$('securityPill').textContent=yes?'نیاز به ورود':'فعال'}
-  function time(value){if(!value)return'—';try{return new Date(value).toLocaleString('fa-IR',{dateStyle:'short',timeStyle:'short'})}catch{return value}}
-  async function api(path,options={}){const headers={'x-panel-password':password,...(options.headers||{})};const response=await fetch(path,{...options,headers});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'پاسخ سرویس ناموفق بود');return data}
-  function renderSecrets(data){const map=[['PLAYLIST_URL','آدرس پلی‌لیست',data.PLAYLIST_URL],['CSTREAM_RTMPS_URL','RTMP کانال',data.CSTREAM_RTMPS_URL||data.RTMP_URL],['GSTREAM_RTMPS_URL','RTMP گروه',data.GSTREAM_RTMPS_URL||data.RTMP_URL],['YT_COOKIES','کوکی YouTube',data.YT_COOKIES],['PROXY_URL','Proxy',data.PROXY_URL]];$('secrets').innerHTML=map.map(([key,label,ready])=>`<div class="secret"><span>${label}</span><small class="${ready?'ok':'missing'}">${ready?'متصل':'وجود ندارد'}</small></div>`).join('')}
-  function renderStatus(data){const run=data.run;const state=run?(run.conclusion||run.status):'unknown';const live=run&&active.includes(run.status);$('statusText').textContent=live?'در حال اجرا':(labels[state]||'بدون اجرا');$('metricStatus').textContent=labels[state]||state;$('metricNumber').textContent=run?`#${run.run_number}`:'—';$('metricTime').textContent=time(run?.updated_at||run?.created_at);$('runMeta').textContent=run?`آخرین اجرا · ${time(run.created_at)}`:'اجرای ثبت‌شده‌ای پیدا نشد';$('statusDot').className='dot '+(live?'live':state==='failure'?'bad':'warn');$('stopBtn').disabled=!password||!live;const link=run?.html_url||'';$('runLink').hidden=!link;$('runLink').href=link;$('log').innerHTML=(data.jobs||[]).map(job=>`<div>${job.name} · ${labels[job.conclusion||job.status]||job.conclusion||job.status}</div>`).join('')||'لاگی برای نمایش نیست.'}
-  async function refresh(){if(!password)return;try{const [status,secrets]=await Promise.all([api('/api/status'),api('/api/secrets')]);renderStatus(status);renderSecrets(secrets);setNotice('وضعیت به‌روز شد.')}catch(error){setNotice(error.message,true);if(/401|رمز|authorized/i.test(error.message)){password='';sessionStorage.removeItem('teletube-panel-password');locked()}}}
-  async function login(){const value=$('password').value.trim();if(!value)return setNotice('رمز پنل را وارد کنید.',true);password=value;sessionStorage.setItem('teletube-panel-password',password);try{await refresh();locked();}catch(error){setNotice(error.message,true)}}
-  async function start(){save();if(config.destination==='custom'&&!config.rtmpUrl)return setNotice('برای مقصد سفارشی، آدرس RTMP لازم است.',true);try{$('startBtn').disabled=true;setNotice('در حال ارسال درخواست به GitHub Actions...');await api('/api/start',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({playlistUrl:config.playlistUrl,destination:config.destination,streamQuality:config.quality,rtmpUrl:config.destination==='custom'?config.rtmpUrl:'',proxyUrl:config.proxyUrl})});setNotice('اجرا در صف قرار گرفت.');await refresh()}catch(error){setNotice(error.message,true)}finally{locked()}}
-  async function stop(){if(!confirm('اجرای فعال متوقف شود؟'))return;try{await api('/api/stop',{method:'POST'});setNotice('درخواست توقف ارسال شد.');await refresh()}catch(error){setNotice(error.message,true)}}
-  $('loginBtn').addEventListener('click',login);$('password').addEventListener('keydown',event=>{if(event.key==='Enter')login()});$('refreshBtn').addEventListener('click',refresh);$('startBtn').addEventListener('click',start);$('stopBtn').addEventListener('click',stop);$('destination').addEventListener('change',()=>{$('customWrap').hidden=$('destination').value!=='custom'});['playlistUrl','rtmpUrl','proxyUrl','quality','destination'].forEach(id=>$(id).addEventListener('input',save));load();locked();if(password){$('password').value=password;refresh()}setInterval(()=>{if(password)refresh()},20000);
-</script>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><div class="mark"><i></i></div><div><strong>Teletube</strong><span>اتاق کنترل استریم</span></div></div>
+      <div class="badge">GitHub Actions / Cloudflare Pages</div>
+    </header>
+    <section class="hero">
+      <p class="eyebrow">Broadcast control room</p>
+      <h1>استریم را از یک‌جا روشن نگه دار.</h1>
+      <p>وضعیت اجرای GitHub Actions، سلامت Secretها و کنترل شروع یا توقف پخش پلی‌لیست یوتیوب به تلگرام.</p>
+    </section>
+    <section class="grid">
+      <article class="card wide">
+        <div class="card-head"><div><h2>تنظیمات پخش</h2><p>این مقادیر فقط در حافظه‌ی همین مرورگر ذخیره می‌شوند.</p></div></div>
+        <div class="input-grid">
+          <div class="field full"><label for="playlistUrl">لینک پلی‌لیست یوتیوب</label><input id="playlistUrl" type="url" placeholder="https://www.youtube.com/playlist?list=..." /></div>
+          <div class="field"><label for="rtmpUrl">لینک کامل RTMP تلگرام</label><input id="rtmpUrl" type="password" placeholder="rtmp://.../stream-key" autocomplete="off" /></div>
+          <div class="field"><label for="proxyUrl">پروکسی اختیاری</label><input id="proxyUrl" type="text" placeholder="http://user:pass@host:port" autocomplete="off" /></div>
+        </div>
+        <p class="notice">کلید RTMP روی دستگاه شما می‌ماند و هنگام شروع به اجرای GitHub فرستاده می‌شود؛ روی کامپیوتر عمومی وارد نکنید.</p>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div><h2>وضعیت پخش</h2><p id="runMeta">برای دیدن وضعیت، رمز پنل را وارد کنید.</p></div>
+          <div class="state"><span class="dot" id="statusDot"></span><span id="statusText">قفل است</span></div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><small>آخرین وضعیت</small><strong id="metricStatus">—</strong></div>
+          <div class="metric"><small>شماره اجرا</small><strong id="metricNumber">—</strong></div>
+          <div class="metric"><small>آخرین تغییر</small><strong id="metricTime">—</strong></div>
+        </div>
+        <div class="auth"><input id="password" type="password" placeholder="رمز پنل" autocomplete="current-password" /><button class="ghost" id="loginBtn">ورود و بررسی</button></div>
+        <div class="notice" id="notice"></div>
+      </article>
+      <article class="card">
+        <div class="card-head"><div><h2>کنترل پخش</h2><p>هر کلیک یک اجرای GitHub Actions را کنترل می‌کند.</p></div></div>
+        <div class="controls"><button class="primary" id="startBtn" disabled>شروع استریم</button><button class="danger" id="stopBtn" disabled>توقف استریم</button></div>
+        <p class="notice">برای استریم ۲۴ ساعته، محدودیت حدود ۶ ساعت GitHub Actions را در نظر بگیر.</p>
+      </article>
+      <article class="card">
+        <div class="card-head"><div><h2>تنظیمات امن</h2><p>مقدار Secretها هرگز در پنل نمایش داده نمی‌شود.</p></div></div>
+        <div class="secret-list" id="secrets"><div class="secret"><span>در انتظار ورود</span><b>—</b></div></div>
+      </article>
+      <article class="card wide">
+        <div class="card-head"><div><h2>گزارش اجرا</h2><p>آخرین وضعیت job و مراحل Workflow.</p></div><button class="ghost" id="refreshBtn" disabled>به‌روزرسانی</button></div>
+        <div class="log" id="log">برای مشاهده گزارش، ابتدا وارد شوید.</div>
+      </article>
+    </section>
+    <footer><span>کلیدها در سمت سرور نگهداری می‌شوند.</span><a href="https://github.com/Aishervin/teletube/actions/workflows/youtube-to-telegram.yml" target="_blank" rel="noreferrer">باز کردن GitHub Actions</a></footer>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let password = sessionStorage.getItem('teletube-panel-password') || '';
+    let streamConfig = JSON.parse(localStorage.getItem('teletube-stream-config') || '{}');
+    let timer;
+    $('password').value = password;
+    $('playlistUrl').value = streamConfig.playlistUrl || '';
+    $('rtmpUrl').value = streamConfig.rtmpUrl || '';
+    $('proxyUrl').value = streamConfig.proxyUrl || '';
+    const labels = { queued: 'در صف', in_progress: 'در حال اجرا', completed: 'پایان یافته', success: 'موفق', failure: 'ناموفق', cancelled: 'لغو شده', timed_out: 'زمان تمام شد' };
+    function setNotice(text, bad = false) { $('notice').textContent = text || ''; $('notice').style.color = bad ? 'var(--coral)' : 'var(--muted)'; }
+    function setButtons(enabled) { $('startBtn').disabled = !enabled; $('stopBtn').disabled = !enabled; $('refreshBtn').disabled = !enabled; }
+    function formatTime(value) { return value ? new Date(value).toLocaleString('fa-IR', { dateStyle: 'short', timeStyle: 'short' }) : '—'; }
+    async function api(path, options = {}) {
+      const headers = Object.assign({ 'x-panel-password': password }, options.headers || {});
+      const response = await fetch(path, Object.assign({}, options, { headers }));
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'ارتباط با سرور انجام نشد.');
+      return data;
+    }
+    function renderRun(data) {
+      const run = data.run;
+      const active = run && ['queued', 'in_progress'].includes(run.status);
+      const state = run ? (run.status === 'completed' ? run.conclusion : run.status) : 'بدون اجرا';
+      $('statusText').textContent = active ? 'در حال پخش' : (labels[state] || state);
+      $('metricStatus').textContent = labels[state] || state;
+      $('metricNumber').textContent = run ? `#${run.run_number}` : '—';
+      $('metricTime').textContent = formatTime(run?.updated_at || run?.created_at);
+      $('runMeta').textContent = run ? `آخرین اجرا: ${formatTime(run.created_at)}` : 'هنوز اجرایی ثبت نشده است.';
+      $('statusDot').className = `dot ${active ? 'live' : (run?.conclusion === 'failure' ? 'bad' : 'warn')}`;
+      $('log').innerHTML = run ? (data.jobs || []).map((job) => `<div class="log-line">${job.name} — ${labels[job.conclusion || job.status] || job.conclusion || job.status}</div>`).join('') || 'جزئیات job هنوز آماده نیست.' : 'هنوز اجرایی ثبت نشده است.';
+    }
+    function saveStreamConfig() { streamConfig = { playlistUrl: $('playlistUrl').value.trim(), rtmpUrl: $('rtmpUrl').value.trim(), proxyUrl: $('proxyUrl').value.trim() }; localStorage.setItem('teletube-stream-config', JSON.stringify(streamConfig)); }
+    async function refresh() { try { const [status, secrets] = await Promise.all([api('/api/status'), api('/api/secrets')]); renderRun(status); $('secrets').innerHTML = [['playlistUrl','لینک پلی‌لیست','حافظه مرورگر'],['rtmpUrl','لینک RTMP تلگرام','حافظه مرورگر'],['YT_COOKIES','کوکی یوتیوب','GitHub Secret']].map(([key,label,source]) => { const ready = key === 'YT_COOKIES' ? secrets[key] : Boolean(streamConfig[key]); return `<div class="secret"><span>${label}<small>${source}</small></span><b class="${ready ? 'ok' : 'missing'}">${ready ? 'آماده' : 'ناقص'}</b></div>`; }).join(''); setNotice('آخرین وضعیت دریافت شد.'); } catch (error) { setNotice(error.message, true); } }
+    async function login() { password = $('password').value.trim(); if (!password) return setNotice('رمز پنل را وارد کنید.', true); sessionStorage.setItem('teletube-panel-password', password); try { setButtons(true); await refresh(); clearInterval(timer); timer = setInterval(refresh, 15000); } catch (_) { setButtons(false); } }
+    $('loginBtn').addEventListener('click', login);
+    $('password').addEventListener('keydown', (event) => { if (event.key === 'Enter') login(); });
+    $('refreshBtn').addEventListener('click', refresh);
+    ['playlistUrl', 'rtmpUrl', 'proxyUrl'].forEach((id) => $(id).addEventListener('input', saveStreamConfig));
+    $('startBtn').addEventListener('click', async () => { saveStreamConfig(); if (!streamConfig.playlistUrl || !streamConfig.rtmpUrl) return setNotice('لینک پلی‌لیست و RTMP را وارد کنید.', true); try { await api('/api/start', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(streamConfig) }); setNotice('دستور شروع ارسال شد.'); await refresh(); } catch (error) { setNotice(error.message, true); } });
+    $('stopBtn').addEventListener('click', async () => { if (!confirm('استریم فعلی متوقف شود؟')) return; try { await api('/api/stop', { method: 'POST' }); setNotice('دستور توقف ارسال شد.'); await refresh(); } catch (error) { setNotice(error.message, true); } });
+    if (password) login();
+  </script>
 </body>
 </html>
