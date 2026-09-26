@@ -41,7 +41,7 @@ jobs:
           set -euo pipefail
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends ffmpeg python3-pip
-          python3 -m pip install --user --upgrade --break-system-packages yt-dlp
+          python3 -m pip install --user --upgrade --break-system-packages yt-dlp yt-dlp-ejs
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Verify streaming tools

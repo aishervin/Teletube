@@ -18,9 +18,9 @@ COOKIES = os.environ.get("YT_COOKIES", "")
 PROXY_URL = os.environ.get("PROXY_URL", "").strip()
 POT_BASE_URL = os.environ.get("POT_BASE_URL", "").strip()
 
-# android_vr currently exposes a progressive format without the web client's
-# "The page needs to be reloaded" failure. The other clients are fallbacks.
-CLIENTS = ("android_vr", "android", "web_safari")
+# Web clients support cookies and expose real media formats once the EJS
+# challenge solver is enabled. Keep android_vr as a final no-cookie fallback.
+CLIENTS = ("web", "web_safari", "web_embedded", "android_vr")
 VIDEO_ID = re.compile(r"^[A-Za-z0-9_-]{6,}$")
 STOP = False
 
@@ -58,6 +58,8 @@ def yt_args(client: str) -> list[str]:
         "yt-dlp",
         "--ignore-config",
         "--no-warnings",
+        "--js-runtimes",
+        "node",
         "--extractor-args",
         f"youtube:{extractor_args(client)}",
         "--retries",
