@@ -234,7 +234,7 @@ def stream_file(video_path: Path) -> int:
             continue
     else:
         stderr, _ = process.communicate()
-    if stderr.strip():
+    if stderr and stderr.strip():
         lines = redact(stderr.strip()).splitlines()[-5:]
         for line in lines:
             log(f"ffmpeg: {line[:500]}")
