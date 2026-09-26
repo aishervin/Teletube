@@ -72,6 +72,10 @@
     .ok { color: var(--mint); }
     .missing { color: var(--coral); }
     .auth { display: flex; gap: 8px; margin-top: 16px; }
+    .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { display: grid; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: var(--muted); font-size: 12px; }
     input { min-width: 0; flex: 1; background: #0a0f1c; border: 1px solid var(--line); color: var(--ink); border-radius: 11px; padding: 11px 12px; outline: none; }
     input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(110,168,255,.12); }
     .log { min-height: 110px; max-height: 265px; overflow: auto; border-radius: 13px; background: #090d17; border: 1px solid var(--line); padding: 14px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; direction: ltr; text-align: left; font-size: 12px; color: #b9c4d9; }
@@ -79,7 +83,7 @@
     .log-line:last-child { border-bottom: 0; }
     .notice { min-height: 20px; color: var(--muted); font-size: 12px; margin-top: 12px; }
     footer { display: flex; justify-content: space-between; gap: 14px; color: var(--muted); font-size: 11px; margin-top: 18px; }
-    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .topbar { margin-bottom: 38px; } .metrics { grid-template-columns: 1fr; } .shell { width: min(100% - 22px, 620px); padding-top: 22px; } .card { padding: 18px; } footer { flex-direction: column; } }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .topbar { margin-bottom: 38px; } .metrics, .input-grid { grid-template-columns: 1fr; } .field.full { grid-column: auto; } .shell { width: min(100% - 22px, 620px); padding-top: 22px; } .card { padding: 18px; } footer { flex-direction: column; } }
   </style>
 </head>
 <body>
@@ -95,6 +99,15 @@
     </section>
     <section class="grid">
       <article class="card wide">
+        <div class="card-head"><div><h2>تنظیمات پخش</h2><p>این مقادیر فقط در حافظه‌ی همین مرورگر ذخیره می‌شوند.</p></div></div>
+        <div class="input-grid">
+          <div class="field full"><label for="playlistUrl">لینک پلی‌لیست یوتیوب</label><input id="playlistUrl" type="url" placeholder="https://www.youtube.com/playlist?list=..." /></div>
+          <div class="field"><label for="rtmpUrl">لینک کامل RTMP تلگرام</label><input id="rtmpUrl" type="password" placeholder="rtmp://.../stream-key" autocomplete="off" /></div>
+          <div class="field"><label for="proxyUrl">پروکسی اختیاری</label><input id="proxyUrl" type="text" placeholder="http://user:pass@host:port" autocomplete="off" /></div>
+        </div>
+        <p class="notice">کلید RTMP روی دستگاه شما می‌ماند و هنگام شروع به اجرای GitHub فرستاده می‌شود؛ روی کامپیوتر عمومی وارد نکنید.</p>
+      </article>
+      <article class="card">
         <div class="card-head">
           <div><h2>وضعیت پخش</h2><p id="runMeta">برای دیدن وضعیت، رمز پنل را وارد کنید.</p></div>
           <div class="state"><span class="dot" id="statusDot"></span><span id="statusText">قفل است</span></div>
@@ -126,8 +139,12 @@
   <script>
     const $ = (id) => document.getElementById(id);
     let password = sessionStorage.getItem('teletube-panel-password') || '';
+    let streamConfig = JSON.parse(localStorage.getItem('teletube-stream-config') || '{}');
     let timer;
     $('password').value = password;
+    $('playlistUrl').value = streamConfig.playlistUrl || '';
+    $('rtmpUrl').value = streamConfig.rtmpUrl || '';
+    $('proxyUrl').value = streamConfig.proxyUrl || '';
     const labels = { queued: 'در صف', in_progress: 'در حال اجرا', completed: 'پایان یافته', success: 'موفق', failure: 'ناموفق', cancelled: 'لغو شده', timed_out: 'زمان تمام شد' };
     function setNotice(text, bad = false) { $('notice').textContent = text || ''; $('notice').style.color = bad ? 'var(--coral)' : 'var(--muted)'; }
     function setButtons(enabled) { $('startBtn').disabled = !enabled; $('stopBtn').disabled = !enabled; $('refreshBtn').disabled = !enabled; }
@@ -151,12 +168,14 @@
       $('statusDot').className = `dot ${active ? 'live' : (run?.conclusion === 'failure' ? 'bad' : 'warn')}`;
       $('log').innerHTML = run ? (data.jobs || []).map((job) => `<div class="log-line">${job.name} — ${labels[job.conclusion || job.status] || job.conclusion || job.status}</div>`).join('') || 'جزئیات job هنوز آماده نیست.' : 'هنوز اجرایی ثبت نشده است.';
     }
-    async function refresh() { try { const [status, secrets] = await Promise.all([api('/api/status'), api('/api/secrets')]); renderRun(status); $('secrets').innerHTML = [['PLAYLIST_URL','لینک پلی‌لیست'],['RTMP_URL','لینک RTMP تلگرام'],['YT_COOKIES','کوکی یوتیوب']].map(([key,label]) => `<div class="secret"><span>${label}</span><b class="${secrets[key] ? 'ok' : 'missing'}">${secrets[key] ? 'فعال' : 'ناقص'}</b></div>`).join(''); setNotice('آخرین وضعیت دریافت شد.'); } catch (error) { setNotice(error.message, true); } }
+    function saveStreamConfig() { streamConfig = { playlistUrl: $('playlistUrl').value.trim(), rtmpUrl: $('rtmpUrl').value.trim(), proxyUrl: $('proxyUrl').value.trim() }; localStorage.setItem('teletube-stream-config', JSON.stringify(streamConfig)); }
+    async function refresh() { try { const [status, secrets] = await Promise.all([api('/api/status'), api('/api/secrets')]); renderRun(status); $('secrets').innerHTML = [['playlistUrl','لینک پلی‌لیست','حافظه مرورگر'],['rtmpUrl','لینک RTMP تلگرام','حافظه مرورگر'],['YT_COOKIES','کوکی یوتیوب','GitHub Secret']].map(([key,label,source]) => { const ready = key === 'YT_COOKIES' ? secrets[key] : Boolean(streamConfig[key]); return `<div class="secret"><span>${label}<small>${source}</small></span><b class="${ready ? 'ok' : 'missing'}">${ready ? 'آماده' : 'ناقص'}</b></div>`; }).join(''); setNotice('آخرین وضعیت دریافت شد.'); } catch (error) { setNotice(error.message, true); } }
     async function login() { password = $('password').value.trim(); if (!password) return setNotice('رمز پنل را وارد کنید.', true); sessionStorage.setItem('teletube-panel-password', password); try { setButtons(true); await refresh(); clearInterval(timer); timer = setInterval(refresh, 15000); } catch (_) { setButtons(false); } }
     $('loginBtn').addEventListener('click', login);
     $('password').addEventListener('keydown', (event) => { if (event.key === 'Enter') login(); });
     $('refreshBtn').addEventListener('click', refresh);
-    $('startBtn').addEventListener('click', async () => { try { await api('/api/start', { method: 'POST' }); setNotice('دستور شروع ارسال شد.'); await refresh(); } catch (error) { setNotice(error.message, true); } });
+    ['playlistUrl', 'rtmpUrl', 'proxyUrl'].forEach((id) => $(id).addEventListener('input', saveStreamConfig));
+    $('startBtn').addEventListener('click', async () => { saveStreamConfig(); if (!streamConfig.playlistUrl || !streamConfig.rtmpUrl) return setNotice('لینک پلی‌لیست و RTMP را وارد کنید.', true); try { await api('/api/start', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(streamConfig) }); setNotice('دستور شروع ارسال شد.'); await refresh(); } catch (error) { setNotice(error.message, true); } });
     $('stopBtn').addEventListener('click', async () => { if (!confirm('استریم فعلی متوقف شود؟')) return; try { await api('/api/stop', { method: 'POST' }); setNotice('دستور توقف ارسال شد.'); await refresh(); } catch (error) { setNotice(error.message, true); } });
     if (password) login();
   </script>

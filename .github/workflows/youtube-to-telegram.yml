@@ -2,6 +2,19 @@ name: YouTube playlist to Telegram
 
 on:
   workflow_dispatch:
+    inputs:
+      playlist_url:
+        description: YouTube playlist URL
+        required: false
+        type: string
+      rtmp_url:
+        description: Telegram RTMP URL and stream key
+        required: false
+        type: string
+      proxy_url:
+        description: Optional proxy URL
+        required: false
+        type: string
   schedule:
     # GitHub-hosted jobs have a six-hour limit. Restart shortly after each run.
     - cron: "0 */6 * * *"
@@ -43,10 +56,10 @@ jobs:
       - name: Start stream
         shell: bash
         env:
-          PLAYLIST_URL: ${{ secrets.PLAYLIST_URL }}
-          RTMP_URL: ${{ secrets.RTMP_URL }}
+          PLAYLIST_URL: ${{ inputs.playlist_url || secrets.PLAYLIST_URL }}
+          RTMP_URL: ${{ inputs.rtmp_url || secrets.RTMP_URL }}
           YT_COOKIES: ${{ secrets.YT_COOKIES }}
-          PROXY_URL: ${{ secrets.PROXY_URL }}
+          PROXY_URL: ${{ inputs.proxy_url || secrets.PROXY_URL }}
           POT_BASE_URL: ${{ secrets.POT_BASE_URL }}
         run: |
           set -euo pipefail
