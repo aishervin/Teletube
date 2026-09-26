@@ -21,5 +21,3 @@ jobs:
           projectName: teletube-panel
           directory: panel
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-
-# Temporary Pages deployment trigger; remove after the rollback is live.
