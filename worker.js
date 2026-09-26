@@ -107,7 +107,7 @@ function streamOneVideo(videoId) {
       ...baseYtdlpArgs(),
       "-f",
       "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
-      ...youtubeExtractorArgs("player_client=default,-web_creator"),
+      ...youtubeExtractorArgs("player_client=tv,ios"),
       "-o",
       "-",
       videoUrl,
