@@ -51,7 +51,7 @@ jobs:
           yt-dlp --version
           ffmpeg -version >/dev/null
           echo "ffmpeg is ready"
-          node --version
+           python3 --version
 
       - name: Start stream
         shell: bash
@@ -73,4 +73,4 @@ jobs:
             exit 1
           }
 
-          node worker.js
+           python3 stream.py
