@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>پنل کنترل استریم یوتیوب به تلگرام</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #171a21;
+    --border: #262a34;
+    --text: #e8e9ec;
+    --muted: #9096a2;
+    --accent: #4f8cff;
+    --green: #3ecf8e;
+    --red: #ef5c5c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Vazirmatn", Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap { width: 100%; max-width: 640px; }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  p.sub { color: var(--muted); margin-top: 0; margin-bottom: 24px; font-size: 14px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--muted); }
+  input, textarea {
+    width: 100%;
+    background: #0f1115;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 14px;
+    font-family: inherit;
+  }
+  textarea { resize: vertical; min-height: 70px; }
+  .row { display: flex; gap: 10px; }
+  button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-save { background: var(--accent); color: white; }
+  .btn-start { background: var(--green); color: #0a1a12; }
+  .btn-stop { background: var(--red); color: #2a0a0a; }
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); }
+  .dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .dot.off { background: var(--red); }
+  #logs {
+    background: #0a0c10;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    height: 260px;
+    overflow-y: auto;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    direction: ltr;
+    text-align: left;
+    color: #b9c0cc;
+    white-space: pre-wrap;
+  }
+  .msg { font-size: 13px; margin-top: 8px; min-height: 18px; color: var(--muted); }
+  small.hint { display:block; color: var(--muted); font-size: 12px; margin-top: -8px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>پنل کنترل استریم پلی‌لیست یوتیوب → تلگرام</h1>
+  <p class="sub">لینک پلی‌لیست و لینک RTMP کانال رو وارد کن، ذخیره کن، بعد استریم رو شروع کن.</p>
+
+  <div class="card">
+    <label>لینک پلی‌لیست یوتیوب</label>
+    <input id="playlistUrl" placeholder="https://www.youtube.com/playlist?list=..." />
+
+    <label>آدرس RTMP کانال تلگرام (از Start Streaming در تنظیمات کانال بگیر)</label>
+    <input id="rtmpUrl" placeholder="rtmp://dc.pluto.t.me/s/xxxxxxxxxxxxxxxxxx" />
+
+    <label>پروکسی (اختیاری - اگر یوتیوب بلاکت کرد)</label>
+    <input id="proxyUrl" placeholder="http://user:pass@ip:port" />
+
+    <label>کوکی مرورگر (اختیاری ولی خیلی کمک می‌کنه - محتوای فایل cookies.txt رو اینجا بچسبون)</label>
+    <textarea id="cookies" placeholder="# Netscape HTTP Cookie File ..."></textarea>
+    <small class="hint">این فقط وقتی که می‌خوای کوکی رو عوض کنی پر کن؛ اگر خالی بذاری کوکی قبلی حفظ میشه.</small>
+
+    <button class="btn-save" onclick="saveConfig()">ذخیره تنظیمات</button>
+    <div class="msg" id="saveMsg"></div>
+  </div>
+
+  <div class="card">
+    <div class="status">
+      <div class="dot off" id="statusDot"></div>
+      <span id="statusText">وضعیت: نامشخص</span>
+    </div>
+    <div class="row">
+      <button class="btn-start" onclick="startStream()">شروع استریم</button>
+      <button class="btn-stop" onclick="stopStream()">توقف استریم</button>
+    </div>
+    <div class="msg" id="actionMsg"></div>
+  </div>
+
+  <div class="card">
+    <label>لاگ زنده</label>
+    <div id="logs">در حال بارگذاری...</div>
+  </div>
+</div>
+
+<script>
+async function loadConfig() {
+  const res = await fetch("/api/config");
+  const cfg = await res.json();
+  document.getElementById("playlistUrl").value = cfg.playlistUrl || "";
+  document.getElementById("rtmpUrl").value = cfg.rtmpUrl || "";
+  document.getElementById("proxyUrl").value = cfg.proxyUrl || "";
+  document.getElementById("cookies").placeholder = cfg.hasCookies
+    ? "کوکی قبلاً ذخیره شده — برای تغییر، کوکی جدید رو اینجا بچسبون"
+    : "# Netscape HTTP Cookie File ...";
+}
+
+async function saveConfig() {
+  const body = {
+    playlistUrl: document.getElementById("playlistUrl").value,
+    rtmpUrl: document.getElementById("rtmpUrl").value,
+    proxyUrl: document.getElementById("proxyUrl").value,
+    cookies: document.getElementById("cookies").value,
+  };
+  const res = await fetch("/api/config", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  document.getElementById("saveMsg").innerText = data.ok ? "ذخیره شد ✔" : "خطا در ذخیره";
+  document.getElementById("cookies").value = "";
+  loadConfig();
+}
+
+async function startStream() {
+  const res = await fetch("/api/start", { method: "POST" });
+  const data = await res.json();
+  document.getElementById("actionMsg").innerText = data.message;
+}
+
+async function stopStream() {
+  const res = await fetch("/api/stop", { method: "POST" });
+  const data = await res.json();
+  document.getElementById("actionMsg").innerText = data.message;
+}
+
+async function pollStatus() {
+  try {
+    const res = await fetch("/api/status");
+    const data = await res.json();
+    const dot = document.getElementById("statusDot");
+    const text = document.getElementById("statusText");
+    if (data.running) {
+      dot.className = "dot on";
+      text.innerText = "وضعیت: در حال استریم";
+    } else {
+      dot.className = "dot off";
+      text.innerText = "وضعیت: متوقف";
+    }
+    const logsEl = document.getElementById("logs");
+    logsEl.innerText = data.logs.join("\n");
+    logsEl.scrollTop = logsEl.scrollHeight;
+  } catch (e) {
+    // ignore transient errors
+  }
+}
+
+loadConfig();
+pollStatus();
+setInterval(pollStatus, 2000);
+</script>
+</body>
+</html>
