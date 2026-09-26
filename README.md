@@ -37,3 +37,14 @@ Workflow به صورت زمان بندی شده هم هر ۶ ساعت اجرا �
 - `Sign in to confirm you're not a bot` یا `403`: کوکی یوتیوب را با یک فایل Netscape جدید جایگزین کنید.
 - خطای اتصال RTMP: لینک RTMP و Stream Key را از Live Stream کانال دوباره بگیرید.
 - اجرای ناموفق به دلیل Secret: نام Secretها باید دقیقاً مطابق جدول بالا باشد.
+
+## پنل کنترل Cloudflare Pages
+
+فایل های پنل در پوشه `panel` قرار دارند. برای اجرای امن پنل، این متغیرهای سمت سرور Cloudflare Pages را تنظیم کنید:
+
+- `GITHUB_TOKEN`: توکن GitHub با دسترسی Actions برای همین ریپو
+- `PANEL_PASSWORD`: رمز ورود به پنل
+- `GITHUB_OWNER`: اختیاری؛ مقدار پیش فرض `Aishervin`
+- `GITHUB_REPO`: اختیاری؛ مقدار پیش فرض `teletube`
+
+پنل فقط وضعیت Secretها و اجرای Workflow را نشان می دهد و هیچ مقدار محرمانه ای را به مرورگر نمی فرستد.
