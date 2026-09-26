@@ -74,7 +74,7 @@ jobs:
           PLAYLIST_URL: ${{ inputs.playlist_url || secrets.PLAYLIST_URL }}
           DESTINATION: ${{ inputs.destination || 'channel' }}
           STREAM_QUALITY: ${{ inputs.stream_quality || 'balanced' }}
-          RTMP_URL: ${{ inputs.rtmp_url || ((inputs.destination || 'channel') == 'group' && secrets.GSTREAM_RTMPS_URL || secrets.CSTREAM_RTMPS_URL) }}
+          RTMP_URL: ${{ inputs.rtmp_url || ((inputs.destination || 'channel') == 'group' && (secrets.GSTREAM_RTMPS_URL || secrets.RTMP_URL) || (secrets.CSTREAM_RTMPS_URL || secrets.RTMP_URL)) }}
           YT_COOKIES: ${{ secrets.YT_COOKIES }}
           PROXY_URL: ${{ inputs.proxy_url || secrets.PROXY_URL }}
           POT_BASE_URL: ${{ secrets.POT_BASE_URL }}
