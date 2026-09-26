@@ -9,6 +9,7 @@ const playlistUrl = process.env.PLAYLIST_URL;
 const rtmpUrl = process.env.RTMP_URL;
 const cookiesContent = process.env.YT_COOKIES || "";
 const proxyUrl = process.env.PROXY_URL || "";
+const potBaseUrl = process.env.POT_BASE_URL || "";
 
 if (!playlistUrl || !rtmpUrl) {
   console.error("[worker] PLAYLIST_URL یا RTMP_URL تنظیم نشده، خروج.");
@@ -42,10 +43,20 @@ function baseYtdlpArgs() {
   return args;
 }
 
+// extractor-args مشترک (player_client + آدرس سرور PO Token در صورت وجود)
+function youtubeExtractorArgs(extra) {
+  let val = extra || "";
+  if (potBaseUrl.trim()) {
+    val += (val ? ";" : "") + `getpot_bgutil_baseurl=${potBaseUrl.trim()}`;
+  }
+  return val ? ["--extractor-args", `youtube:${val}`] : [];
+}
+
 function getPlaylistIds() {
   return new Promise((resolve, reject) => {
     const args = [
       ...baseYtdlpArgs(),
+      ...youtubeExtractorArgs(),
       "--flat-playlist",
       "--print",
       "%(id)s",
@@ -96,8 +107,7 @@ function streamOneVideo(videoId) {
       ...baseYtdlpArgs(),
       "-f",
       "bestvideo[height<=1080]+bestaudio/best[height<=1080]/best",
-      "--extractor-args",
-      "youtube:player_client=default,-web_creator",
+      ...youtubeExtractorArgs("player_client=default,-web_creator"),
       "-o",
       "-",
       videoUrl,
