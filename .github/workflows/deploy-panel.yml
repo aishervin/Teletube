@@ -1,6 +1,11 @@
 name: Deploy control panel to Cloudflare Pages
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - panel/**
+      - .github/workflows/deploy-panel.yml
   workflow_dispatch:
 
 permissions:
