@@ -21,9 +21,9 @@ POT_BASE_URL = os.environ.get("POT_BASE_URL", "").strip()
 DESTINATION = os.environ.get("DESTINATION", "custom").strip() or "custom"
 STREAM_QUALITY = os.environ.get("STREAM_QUALITY", "balanced").strip() or "balanced"
 
-# Web clients support cookies and expose real media formats once the EJS
-# challenge solver is enabled. Keep android_vr as a final no-cookie fallback.
-CLIENTS = ("web", "web_safari", "web_embedded", "android_vr")
+# Prefer the client that exposed the available media formats in testing, while
+# keeping the other clients as fallbacks for videos with different signatures.
+CLIENTS = ("web_embedded", "web", "web_safari", "android_vr")
 VIDEO_ID = re.compile(r"^[A-Za-z0-9_-]{6,}$")
 QUALITY_PROFILES = {
     "economy": {"max_height": 480, "max_width": 854, "bitrate": "900k", "maxrate": "1100k", "bufsize": "1800k", "audio": "96k", "fps": 25, "gop": 50},
